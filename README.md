@@ -1,2 +1,2 @@
 # audio-visualizer
-Audio Visualizer For IGME 330
+Audio Visualizer For IGME-330

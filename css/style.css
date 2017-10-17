@@ -1,0 +1,28 @@
+body {
+    font-family: tahoma, verdana, sans serif;
+    margin: 0;
+}
+
+canvas {
+    margin:0;
+    background: black;
+    width: 75%;
+    height: 75%;
+}
+
+#controls {
+    margin: 0;
+    width: 25%;
+    height: 75%;
+    float: left;
+}
+
+#topBar {
+    margin: 0;
+    width: 100%;
+    height: 25%;
+}
+
+h1 {
+    margin: 0;
+}
