@@ -3,9 +3,9 @@
     "use strict";
 
     var NUM_SAMPLES = 256;
-    var SOUND_1 = 'media/New Adventure Theme.mp3';
-    var SOUND_2 = 'media/Peanuts Theme.mp3';
-    var SOUND_3 = 'media/The Picard Song.mp3';
+    var SOUND_1 = 'media/Rockabye.mp3';
+    var SOUND_2 = 'media/Don\'t Let Me Down.mp3';
+    var SOUND_3 = 'media/In The Name Of Love.mp3';
     var audioElement;
     var analyserNode;
     var canvas, ctx;
