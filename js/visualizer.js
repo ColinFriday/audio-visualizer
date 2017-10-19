@@ -15,6 +15,8 @@
     var noise = false;
     var lines = false;
     var brightness = true;
+    var delayAmount = 0;
+    var delayNode;
 
     function init() {
         // set up canvas stuff
@@ -51,6 +53,10 @@
         // create an analyser node
         analyserNode = audioCtx.createAnalyser();
 
+        // create DelayNode instance
+        delayNode = audioCtx.createDelay();
+        delayNode.delayTime.value = delayAmount;
+
         /*
         We will request NUM_SAMPLES number of samples or "bins" spaced equally 
         across the sound spectrum.
@@ -65,10 +71,25 @@
 
         // this is where we hook up the <audio> element to the analyserNode
         sourceNode = audioCtx.createMediaElementSource(audioElement);
+
+        /*
         sourceNode.connect(analyserNode);
 
         // here we connect to the destination i.e. speakers
         analyserNode.connect(audioCtx.destination);
+        */
+
+        // connect source node directly to speakers sowe can hear the unaltered source in this channel
+
+        sourceNode.connect(audioCtx.destination);
+
+        // this channel will play and visualize the delay
+
+        sourceNode.connect(delayNode);
+        delayNode.connect(analyserNode);
+        analyserNode.connect(audioCtx.destination);
+
+
         return analyserNode;
     }
 
@@ -109,21 +130,26 @@
         // OR
         //analyserNode.getByteTimeDomainData(data); // waveform data
 
+        // Change Delay Mode Amount
+        delayAmount = document.querySelector("#delaySlider").value;
+        delayNode.delayTime.value = delayAmount;
+
         // DRAW!
         ctx.clearRect(0, 0, 800, 600);
-        var barWidth = 4;
+        var barWidth = 10;
         var barSpacing = 1;
         var barHeight = 100;
         var topSpacing = 50;
+        var barLoop = 0;
 
         // loop through the data and draw!
-        for (var i = 0; i < data.length; i++) {
+        for (var i = 0; i < data.length; i += 2) {
             ctx.fillStyle = 'rgba(0,255,0,0.6)';
 
             // the higher the amplitude of the sample (bin) the taller the bar
             // remember we have to draw our bars left-to-right and top-down
-            ctx.fillRect(i * (barWidth + barSpacing), topSpacing + 256 - data[i], barWidth, barHeight);
-            ctx.fillRect(640 - i * (barWidth + barSpacing), topSpacing + 256 - data[i] - 20, barWidth, barHeight);
+            ctx.fillRect(barLoop * (barWidth + barSpacing), topSpacing + 256 - data[i], barWidth, 480 - topSpacing + 256 - data[i]);
+            ctx.fillRect(640 - barLoop * (barWidth + barSpacing), topSpacing + 256 - data[i] - 20, barWidth, barHeight);
 
             /*
                 ctx.strokeStyle = "rgba(0,255,0,.2)";
@@ -168,9 +194,12 @@
             ctx.arc(canvas.width / 2, canvas.height / 2, circleRadius * .5, 0, 2 * Math.PI, false);
             ctx.fill();
             ctx.closePath();
+
+            barLoop++;
         }
 
         manipulatePixels();
+
 
     }
 

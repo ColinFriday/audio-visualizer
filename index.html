@@ -9,51 +9,57 @@
 </head>
 
 <body>
-    <div id="topBar">
-        <h1>Title Bar</h1>
-    </div>
-    <div id="controls">
-        <h3>Music Controls</h3>
-        <audio controls loop></audio>
-        <p></p>
-        <label>Track: 
-			<select id="trackSelect" >
-                <option value="media/Rockabye.mp3">Rockabye</option>
-                <option value="media/Don't Let Me Down.mp3">Don't Let Me Down</option>
-                <option value="media/In The Name Of Love.mp3">In The Name Of Love</option>           
-			</select>
-		</label>
-        <p id="status">???</p>
-        <h3>Visual Controls</h3>
-        <label>
-            Circle Max Radius:
+    <div id="controlBar">
+        <div id="controls">
+            <h3>Audio Controls</h3>
+            <audio controls loop></audio>
+            <p></p>
+            <label>Track: 
+                <select id="trackSelect" >
+                    <option value="media/Rockabye.mp3">Rockabye</option>
+                    <option value="media/Don't Let Me Down.mp3">Don't Let Me Down</option>
+                    <option value="media/In The Name Of Love.mp3">In The Name Of Love</option>           
+			    </select>
+		    </label>
+            <p id="status">???</p>
+            <h3>Audio Filters</h3>
+            <label>Delay/ Reverb:
+                <input type="range" min="0" max="1.0" value="0.0" step="0.1" id="delaySlider">
+            </label>
+            <p> </p>
+            <h3>Visual Controls</h3>
+            <label>Circle Max Radius:
             <input type="range" min="50" max="300" value="100" id="circleMaxRadius">
         </label>
-        <p> </p>
-        <label>
+            <p> </p>
+            <label>
             Brightness:
-            <input type="range" min="0" max="100" value="50" id="brightness">
-        </label>
-        <p> </p>
-        <button id="fsButton">Go Full Screen</button><br>
-        <h3>Filter Controls</h3>
-        <label>
+            <input type="range" min="0" max="150" value="50" id="brightness">
+            </label>
+            <p> </p>
+            <button id="fsButton">Go Full Screen</button><br>
+            <h3>Visual Filters</h3>
+            <label>
             Red Tint: 
             <input type="checkbox" id="redTint">
-        </label>
-        <label>
+            </label>
+            <label>
             Invert:
             <input type="checkbox" id="invert">
         </label>
-        <p> </p>
-        <label>
+            <p> </p>
+            <label>
             Noise:
             <input type="checkbox" id="noise">
         </label>
-        <label>
+            <label>
             Lines:
             <input type="checkbox" id="lines">
         </label>
+        </div>
+    </div>
+    <div id="topBar">
+        <h1 id="header">DJ Friyay's Juxebox</h1>
     </div>
     <canvas id="canvas" width="640" height="400"></canvas>
 </body>
