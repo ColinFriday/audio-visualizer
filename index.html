@@ -10,55 +10,44 @@
 
 <body>
     <div id="topBar">
-        <h1 id="header">DJ Friyay's Juxebox</h1>
+        <h1 id="header">DJ Friday's Jukebox</h1>
+        <p id="status">???</p>
     </div>
     <div id="controlBar">
         <div id="controls">
+            <h3>Visualization Selector</h3>
+                <select id="visualSelect" >
+                    <option value="freq">Frequency</option> 
+                    <option value="wave">Waveform</option>                    
+			    </select>
             <h3>Audio Controls</h3>
             <audio controls loop></audio>
-            <p></p>
-            <label>Track: 
+            
+            <h3>Track Selector</h3>
                 <select id="trackSelect" >
                     <option value="media/Rockabye.mp3">Rockabye</option>
                     <option value="media/Don't Let Me Down.mp3">Don't Let Me Down</option>
                     <option value="media/In The Name Of Love.mp3">In The Name Of Love</option>           
 			    </select>
-		    </label>
-            <p id="status">???</p>
-            <h3>Audio Filters</h3>
-            <label>Delay/ Reverb:
-                <input type="range" min="0" max="1.0" value="0.0" step="0.1" id="delaySlider">
-            </label>
-            <p> </p>
-            <h3>Visual Controls</h3>
-            <label>Circle Max Radius:
-            <input type="range" min="50" max="300" value="100" id="circleMaxRadius">
-        </label>
-            <p> </p>
-            <label>
-            Brightness:
-            <input type="range" min="0" max="150" value="50" id="brightness">
-            </label>
-            <p> </p>
-            <button id="fsButton">Go Full Screen</button><br>
-            <h3>Visual Filters</h3>
-            <label>
-            Red Tint: 
-            <input type="checkbox" id="redTint">
-            </label>
-            <label>
-            Invert:
-            <input type="checkbox" id="invert">
-        </label>
-            <p> </p>
-            <label>
-            Noise:
-            <input type="checkbox" id="noise">
-        </label>
-            <label>
-            Lines:
-            <input type="checkbox" id="lines">
-        </label>
+            <h3>Delay/Reverb</h3>
+                <input type="range" min="0" max="1.0" value="0.0" step="0.1" id="delaySlider" class="slider">
+            <h3>Circle Max Radius</h3>
+            <input type="range" min="50" max="300" value="100" id="circleMaxRadius" class="slider">
+            <h3>Brightness</h3>
+            <input type="range" min="0" max="50" value="25" id="brightness" class="slider">
+            <h3>Tint</h3>
+            <input class="tint" id="tintCheck" type="checkbox">
+            <select class="tint" id="tintSelect" >
+                    <option value="red">Red</option>
+                    <option value="blue">Blue</option>
+                    <option value="green">Green</option>           
+            </select>
+            <h3>Invert</h3>
+                <input class="loneCheck" type="checkbox" id="invert">
+            <h3>Noise</h3>
+                <input class="loneCheck" type="checkbox" id="noise">
+            <h3>Lines</h3>
+                <input class="loneCheck" type="checkbox" id="lines">
         </div>
     </div>
     <canvas id="canvas" width="640" height="400"></canvas>

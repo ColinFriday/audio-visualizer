@@ -6,17 +6,23 @@
     var SOUND_1 = 'media/Rockabye.mp3';
     var SOUND_2 = 'media/Don\'t Let Me Down.mp3';
     var SOUND_3 = 'media/In The Name Of Love.mp3';
+    var bandNames = [" (feat. Sean Paul & Anne-Marie) by Clean Bandit", " (feat. Daya) - Illenium Remix by The Chainsmokers", " (feat. Bebe Rexha) by Martin Garrix"]
+    var trackSelect;
+    var songNumber;
     var audioElement;
     var analyserNode;
     var canvas, ctx;
     var maxRadius;
     var invert = false;
-    var tintRed = false;
+    var tint = false;
     var noise = false;
     var lines = false;
     var brightness = true;
     var delayAmount = 0;
     var delayNode;
+    var frequencyGradient;
+    var waveform = false;
+    var tintColor = "red";
 
     function init() {
         // set up canvas stuff
@@ -28,6 +34,16 @@
 
         // call our helper function and get an analyser node
         analyserNode = createWebAudioContextWithAnalyserNode(audioElement);
+
+        // Set Up Track Select
+        trackSelect = document.querySelector("#trackSelect");
+        songNumber = trackSelect.selectedIndex;
+
+        // setup linear gradient
+        frequencyGradient = ctx.createLinearGradient(0, 480, 0, 100);
+        frequencyGradient.addColorStop(0, "green");
+        frequencyGradient.addColorStop(.65, "yellow");
+        frequencyGradient.addColorStop(1, "red");
 
         // get sound track <select> and Full Screen button working
         setupUI();
@@ -97,17 +113,14 @@
         document.querySelector("#trackSelect").onchange = function (e) {
             playStream(audioElement, e.target.value);
         };
-
-        document.querySelector("#fsButton").onclick = function () {
-            requestFullscreen(canvas);
-        };
     }
 
     function playStream(audioElement, path) {
         audioElement.src = path;
         audioElement.play();
         audioElement.volume = 0.2;
-        document.querySelector('#status').innerHTML = "Now playing: " + path;
+        songNumber = trackSelect.selectedIndex;
+        document.querySelector('#status').innerHTML = "Now Playing: " + trackSelect.options[songNumber].innerHTML + bandNames[songNumber];
     }
 
     function update() {
@@ -123,50 +136,65 @@
         // create a new array of 8-bit integers (0-255)
         var data = new Uint8Array(NUM_SAMPLES / 2);
 
-        // populate the array with the frequency data
+        if(document.querySelector("#visualSelect").value == "wave") {
+            waveform = true;
+        }
+        else {
+            waveform = false;
+        }
+        
+
+        if(waveform){
+            analyserNode.getByteTimeDomainData(data); // waveform data
+        }
+        else{
+            // populate the array with the frequency data
         // notice these arrays can be passed "by reference" 
-        analyserNode.getByteFrequencyData(data);
-
-        // OR
-        //analyserNode.getByteTimeDomainData(data); // waveform data
-
+            analyserNode.getByteFrequencyData(data);
+        }
+        
         // Change Delay Mode Amount
         delayAmount = document.querySelector("#delaySlider").value;
         delayNode.delayTime.value = delayAmount;
+        
+        tintColor = document.querySelector("#tintSelect").value;
 
         // DRAW!
         ctx.clearRect(0, 0, 800, 600);
-        var barWidth = 10;
+        var barWidth = 13;
         var barSpacing = 1;
         var barHeight = 100;
-        var topSpacing = 50;
+        var topSpacing = 120;
         var barLoop = 0;
 
         // loop through the data and draw!
         for (var i = 0; i < data.length; i += 2) {
-            ctx.fillStyle = 'rgba(0,255,0,0.6)';
+             //'rgba(0,255,0,0.6)';
 
-            // the higher the amplitude of the sample (bin) the taller the bar
-            // remember we have to draw our bars left-to-right and top-down
-            ctx.fillRect(barLoop * (barWidth + barSpacing), topSpacing + 256 - data[i], barWidth, 480 - topSpacing + 256 - data[i]);
-            ctx.fillRect(640 - barLoop * (barWidth + barSpacing), topSpacing + 256 - data[i] - 20, barWidth, barHeight);
+            if (waveform) {
 
-            /*
                 ctx.strokeStyle = "rgba(0,255,0,.2)";
                 ctx.lineWidth = 10;
                 ctx.beginPath();
-                ctx.moveTo(0, canvas.height/2);
-		        ctx.quadraticCurveTo(canvas.width / 2,  canvas.height / 2 + data[i], canvas.width, canvas.height/2);
-		        ctx.stroke();
-                
-                
+                ctx.moveTo(0, canvas.height / 2);
+                ctx.quadraticCurveTo(canvas.width / 2, canvas.height / 2 + (data[i] * 2), canvas.width, canvas.height / 2);
+                ctx.stroke();
+
+
                 ctx.strokeStyle = "rgba(0,255,0,.2)";
                 ctx.lineWidth = 10;
                 ctx.beginPath();
-                ctx.moveTo(0, canvas.height/2);
-		        ctx.quadraticCurveTo(canvas.width / 2, canvas.height /2 - data[i], canvas.width, canvas.height/2);
-		        ctx.stroke();
-				*/
+                ctx.moveTo(0, canvas.height / 2);
+                ctx.quadraticCurveTo(canvas.width / 2, canvas.height / 2 - (data[i] * 2), canvas.width, canvas.height / 2);
+                ctx.stroke();
+            }
+            else{
+                ctx.fillStyle = frequencyGradient;
+                
+                ctx.fillRect(barLoop * (barWidth + barSpacing), topSpacing + 256 - data[i], barWidth, 480 - topSpacing / 2 + 256 - data[i]);
+            }
+
+
 
 
             // red-ish circles
@@ -174,7 +202,7 @@
             maxRadius = document.querySelector("#circleMaxRadius").value;
             var circleRadius = percent * maxRadius;
             ctx.beginPath();
-            ctx.fillStyle = makeColor(255, 111, 111, .34 - percent / 3.0);
+            ctx.fillStyle = makeColor(117, 255, 248, .34 - percent / 3.0);
             ctx.arc(canvas.width / 2, canvas.height / 2, circleRadius, 0, 2 * Math.PI, false);
             ctx.fill();
             ctx.closePath();
@@ -182,7 +210,7 @@
             // blue-ish circles, bigger, more transparent
 
             ctx.beginPath();
-            ctx.fillStyle = makeColor(0, 0, 255, .10 - percent / 10.0);
+            ctx.fillStyle = makeColor(67, 255, 0, .10 - percent / 10.0);
             ctx.arc(canvas.width / 2, canvas.height / 2, circleRadius * 1.5, 0, 2 * Math.PI, false);
             ctx.fill();
             ctx.closePath();
@@ -190,7 +218,7 @@
             // yellow-ish circles, smaller
 
             ctx.beginPath();
-            ctx.fillStyle = makeColor(200, 200, 0, .5 - percent / 5.0);
+            ctx.fillStyle = makeColor(255, 0, 238, .5 - percent / 5.0);
             ctx.arc(canvas.width / 2, canvas.height / 2, circleRadius * .5, 0, 2 * Math.PI, false);
             ctx.fill();
             ctx.closePath();
@@ -246,9 +274,18 @@
 
         for (var i = 0; i < length; i += 4) {
             // iv) increase red value only
-            if (tintRed) {
+            if (tint) {
                 // just the red channel this time
-                data[i] = data[i] + 100;
+                if(tintColor == "red"){
+                    data[i] = data[i] + 100;
+                }
+                else if(tintColor == "green") {
+                    data[i + 1] = data[i + 1] + 100;
+                }
+                else if(tintColor == "blue") {
+                    data[i + 2] = data[i + 2] + 100;
+                }
+                
             }
 
             // v) invert every color channel
@@ -319,9 +356,9 @@
             invert = e.target.checked;
         }
 
-        document.querySelector("#redTint").onchange = function (e) {
+        document.querySelector("#tintCheck").onchange = function (e) {
             console.log("checked=" + e.target.checked);
-            tintRed = e.target.checked;
+            tint = e.target.checked;
         }
     }
 

@@ -25,13 +25,13 @@ canvas {
     margin: 0;
     width: 18%;
     height: 90%;
-    float: left;
-    padding: 1%;   
+    float: left;  
     border: 0px;
     border-top: 5px;
     border-style: solid;
     border-top-color: #43608e;
     background-color: #617ead;
+    overflow: auto;
 }
 
 #topBar {
@@ -48,11 +48,10 @@ canvas {
     text-align: center;
     padding-left: 5%;
     padding-right: 5%;
-    padding-top: 1%;
-    padding-bottom: 1%;
     border-radius: 10px;
     margin-left: 20%;
     margin-right: 20%;
+    color: white;
 }
 
 #controls{
@@ -65,4 +64,44 @@ canvas {
 h3 {
     color: white;
     text-align: center;
+}
+
+#trackSelect {
+    margin-left: 25%;
+    width: 50%;
+}
+
+#visualSelect {
+    margin-left: 25%;
+    width: 50%;
+}
+
+.slider {
+    margin-left: 25%;
+    width: 50%;
+}
+
+#status {
+    margin: 0;
+    text-align: center;
+    padding-left: 5%;
+    padding-right: 5%;
+    padding-top: 1%;
+    padding-bottom: 1%;
+    border-radius: 10px;
+    margin-left: 20%;
+    margin-right: 20%;
+    color: white;
+}
+
+#tintCheck {
+    margin-left: 35%;
+}
+
+#tintSelect {
+    margin-left: 8%
+}
+
+.loneCheck {
+    margin-left: 48%;
 }
